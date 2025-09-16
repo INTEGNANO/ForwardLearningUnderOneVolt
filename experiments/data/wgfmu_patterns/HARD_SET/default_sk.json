@@ -1,0 +1,162 @@
+{
+  "init_delay": 0.050027,
+  "meas_average_time": 5e-06,
+  "name": "HARD_SET",
+  "patterns": {
+    "HSL1": {
+      "id": 3,
+      "meas": "voltage",
+      "name": "hsl",
+      "range": "5V",
+      "sample_count": 1,
+      "time_pattern": [
+        1e-07,
+        1e-07,
+        2e-06,
+        1e-07,
+        2e-05,
+        1e-07,
+        2e-06,
+        1e-07,
+        0.05,
+        1e-07,
+        1e-05,
+        1e-07,
+        0.05
+      ],
+      "voltage_pattern": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "VSL0": {
+      "id": 2,
+      "meas": "current",
+      "name": "vsl",
+      "range": "10mA",
+      "write_range": "10mA",
+      "read_range": "100uA",
+      "sample_count": 1,
+      "time_pattern": [
+        1e-07,
+        1e-07,
+        2e-06,
+        1e-07,
+        2e-05,
+        1e-07,
+        2e-06,
+        1e-07,
+        0.05,
+        1e-07,
+        1e-05,
+        1e-07,
+        0.05
+      ],
+      "voltage_pattern": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "BL0": {
+      "id": 4,
+      "meas": "voltage",
+      "name": "bl",
+      "range": "5V",
+      "sample_count": 1,
+      "time_pattern": [
+        1e-07,
+        1e-07,
+        2e-06,
+        1e-07,
+        2e-05,
+        1e-07,
+        2e-06,
+        1e-07,
+        0.05,
+        1e-07,
+        1e-05,
+        1e-07,
+        0.05
+      ],
+      "voltage_pattern": [
+        0.0,
+        0.0,
+        0.0,
+        2.0,
+        2.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.2,
+        0.2,
+        0.0,
+        0.0
+      ]
+    },
+    "WL0": {
+      "id": 1,
+      "meas": "voltage",
+      "name": "vg",
+      "range": "5V",
+      "sample_count": 1,
+      "time_pattern": [
+        1e-07,
+        1e-07,
+        2e-06,
+        1e-07,
+        2e-05,
+        1e-07,
+        2e-06,
+        1e-07,
+        0.05,
+        1e-07,
+        1e-05,
+        1e-07,
+        0.05
+      ],
+      "voltage_pattern": [
+        0.0,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        0.0,
+        0.0,
+        4.5,
+        4.5,
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "range_change_time": [
+    2.45e-05,
+    0.0500347
+  ],
+  "sample_interval": 0.1000347
+}

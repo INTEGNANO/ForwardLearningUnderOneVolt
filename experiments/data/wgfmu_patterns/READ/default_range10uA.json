@@ -1,0 +1,92 @@
+{
+	"init_delay": 7.5e-06,
+	"meas_average_time": 5e-06,
+	"name": "READ",
+	"patterns": {
+		"GND": {
+			"id": 1,
+			"meas": "voltage",
+			"name": "gnd",
+			"range": "5V",
+			"sample_count": 1,
+			"time_pattern": [
+				5e-06,
+				1e-07,
+				1e-05,
+				1e-07,
+				5e-06
+			],
+			"voltage_pattern": [
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			]
+		},
+		"I": {
+			"id": 2,
+			"meas": "current",
+			"name": "iI",
+			"range": "10uA",
+			"sample_count": 1,
+			"time_pattern": [
+				5e-06,
+				1e-07,
+				1e-05,
+				1e-07,
+				5e-06
+			],
+			"voltage_pattern": [
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			]
+		},
+		"Vcol": {
+			"id": 4,
+			"meas": "voltage",
+			"name": "vcol",
+			"range": "5V",
+			"sample_count": 1,
+			"time_pattern": [
+				5e-06,
+				1e-07,
+				1e-05,
+				1e-07,
+				5e-06
+			],
+			"voltage_pattern": [
+				0.0,
+				0.2,
+				0.2,
+				0.0,
+				0.0
+			]
+		},
+		"Vg": {
+			"id": 3,
+			"meas": "voltage",
+			"name": "vg",
+			"range": "5V",
+			"sample_count": 1,
+			"time_pattern": [
+				5e-06,
+				1e-07,
+				1e-05,
+				1e-07,
+				5e-06
+			],
+			"voltage_pattern": [
+				0.0,
+				4.5,
+				4.5,
+				0.0,
+				0.0
+			]
+		}
+	},
+	"sample_interval": 2.02e-05
+}

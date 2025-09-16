@@ -1,0 +1,124 @@
+{
+	"init_delay": 1.75e-05,
+	"meas_average_time": 1.5e-05,
+	"name": "READ",
+	"patterns": {
+		"BL0": {
+			"id": 4,
+			"meas": "voltage",
+			"name": "bl",
+			"range": "5V",
+			"sample_count": 1,
+			"time_pattern": [
+				5e-06,
+				1e-07,
+				10e-06,
+				1e-07,
+				0.2e-04,
+				1e-07,
+				10e-06,
+				1e-07,
+				5e-06
+			],
+			"voltage_pattern": [
+				0.0,
+				0.5,
+				0.5,
+				0.5,
+				0.5,
+				0.5,
+				0.5,
+				0.0,
+				0.0
+			]
+		},
+		"WL0": {
+			"id": 1,
+			"meas": "voltage",
+			"name": "wl",
+			"range": "5V",
+			"sample_count": 1,
+			"time_pattern": [
+				5e-06,
+				1e-07,
+				10e-06,
+				1e-07,
+				0.2e-04,
+				1e-07,
+				10e-06,
+				1e-07,
+				5e-06
+			],
+			"voltage_pattern": [
+				0.0,
+				0.0,
+				0.0,
+				5.0,
+				5.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			]
+		},
+		"VSL0": {
+			"id": 2,
+			"name": "vsl",
+			"meas": "voltage",
+			"range": "5V",
+			"sample_count": 1,
+			"time_pattern": [
+				5e-06,
+				1e-07,
+				10e-06,
+				1e-07,
+				0.2e-04,
+				1e-07,
+				10e-06,
+				1e-07,
+				5e-06
+			],
+			"voltage_pattern": [
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			]
+		},
+		"HSL1": {
+			"id": 3,
+			"name": "hsl",
+			"meas": "current",
+			"range": "1mA",
+			"sample_count": 1,
+			"time_pattern": [
+				5e-06,
+				1e-07,
+				10e-06,
+				1e-07,
+				0.2e-04,
+				1e-07,
+				10e-06,
+				1e-07,
+				5e-06
+			],
+			"voltage_pattern": [
+				0.0,
+				0.7,
+				0.7,
+				0.7,
+				0.7,
+				0.7,
+				0.7,
+				0.0,
+				0.0
+			]
+		}
+	},
+	"sample_interval": 5e-05
+}
