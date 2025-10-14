@@ -13,7 +13,7 @@ class AnimalsConfig(NamedTuple):
     num_features: int = 512
 
     # Test on train, test (and val) features extraction
-    chi2_test_on_feat_sel: bool = False,
+    chi2_test_on_feat_sel: bool = (False,)
 
     # Can either select all classes, or a subset, selected by class id or class label
     select_classes: Optional[Union[Sequence[int], Sequence[str]]] = None
@@ -28,7 +28,7 @@ class AnimalsDataset(Dataset):
         train: bool = True,
         val: bool = False,
         sel_feat: Optional[Union[Sequence[int], Sequence[str]]] = None,
-        path : str = "Datasets/animals/animals_features.h5"
+        path: str = "animals/animals_features.h5",
     ):
         self.config = config
         self.selected_feat = sel_feat
@@ -54,11 +54,10 @@ class AnimalsDataset(Dataset):
                         and class_id2label[int(k)] in self.config.select_classes
                     )
                 )
-            split = "validation" if val else "train" if train else "test" 
+
+            split = "validation" if val else "train" if train else "test"
             data = {
-                int(k): v[:, :]
-                for k, v in dset[split].items()
-                if _class_selected(k)
+                int(k): v[:, :] for k, v in dset[split].items() if _class_selected(k)
             }
 
             self.class_id2label = {
@@ -87,7 +86,6 @@ class AnimalsDataset(Dataset):
                 else:
                     self.xs = self.xs[:, : self.config.num_features]
 
-
     def __len__(self):
         return len(self.xs)
 
@@ -101,6 +99,6 @@ class AnimalsDataset(Dataset):
             y = self.target_transform(y)
 
         return x, y
-    
+
     def get_selected_feat(self):
         return self.selected_feat

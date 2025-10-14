@@ -71,7 +71,7 @@ def run_inference_from_checkpoint(hyperparams: str, chkpt: str):
         if hyperparams["learning_rule"] != "sff"
         else hyperparams["arch"][0] - 4
     )
-    train_loader, test_loader, val_loader = utils.load_dataset(
+    train_loader, val_loader, test_loader = utils.load_dataset(
         num_features, ternarize=hyperparams.get("ternarize", False)
     )
 
@@ -105,11 +105,11 @@ def run_inference_from_checkpoint(hyperparams: str, chkpt: str):
     )
 
     train_acc = compute_accuracy(model, train_loader)
-    test_acc = compute_accuracy(model, test_loader)
     val_acc = compute_accuracy(model, val_loader)
+    test_acc = compute_accuracy(model, test_loader)
 
     print(
-        f"Train Acc: {train_acc * 100:.2f}%, Test Acc: {test_acc * 100:.2f}%, Val Acc: {val_acc * 100:.2f}%"
+        f"Train Acc: {train_acc * 100:.2f}%, Val Acc: {val_acc * 100:.2f}%, Test Acc: {test_acc * 100:.2f}%"
     )
 
 
@@ -125,7 +125,7 @@ def run_training(hyperparams, *, from_epoch=0):
         if hyperparams["learning_rule"] != "sff"
         else hyperparams["arch"][0] - 4
     )
-    train_loader, test_loader, val_loader = utils.load_dataset(
+    train_loader, val_loader, test_loader = utils.load_dataset(
         num_features, ternarize=hyperparams.get("ternarize", False)
     )
 
@@ -276,16 +276,16 @@ def run_training(hyperparams, *, from_epoch=0):
     if hyperparams["num_epochs"] == 0:
         print("Computing Train Accuracy...")
         train_acc = compute_accuracy(model, train_loader)
-        print("Computing Test Accuracy...")
-        test_acc = compute_accuracy(model, test_loader)
         print("Computing Validation Accuracy...")
         val_acc = compute_accuracy(model, val_loader)
+        print("Computing Test Accuracy...")
+        test_acc = compute_accuracy(model, test_loader)
         with open(LOGDIR / "metrics.csv", "a") as f:
             f.write(
-                f"{int(datetime.now().strftime('%d%m')):04},{int(datetime.now().strftime('%H%M')):04},{train_acc},{test_acc},{val_acc}\n"
+                f"{int(datetime.now().strftime('%d%m')):04},{int(datetime.now().strftime('%H%M')):04},{train_acc},{val_acc},{test_acc}\n"
             )
         print(
-            f"Train Acc: {train_acc * 100:.2f}%, Test Acc: {test_acc * 100:.2f}%, Val Acc: {val_acc * 100:.2f}%"
+            f"Train Acc: {train_acc * 100:.2f}%, Val Acc: {val_acc * 100:.2f}%, Test Acc: {test_acc * 100:.2f}%"
         )
 
         b1530.dll.clear()
@@ -409,21 +409,21 @@ def run_training(hyperparams, *, from_epoch=0):
         train_loss = running_loss / len(train_loader)
         print("Computing Train Accuracy...")
         train_acc = compute_accuracy(model, train_loader)
-        print("Computing Test Accuracy...")
-        test_acc = compute_accuracy(model, test_loader)
-        val_acc = (
-            compute_accuracy(model, val_loader)
+        print("Computing Val Accuracy...")
+        val_acc = compute_accuracy(model, val_loader)
+        test_acc = (
+            compute_accuracy(model, test_loader)
             if epoch + 1 == hyperparams["num_epochs"]
             else -1
         )
         with open(LOGDIR / "metrics.csv", "a") as f:
-            f.write(f"{epoch + 1},{train_loss},{train_acc},{test_acc},{val_acc}\n")
+            f.write(f"{epoch + 1},{train_loss},{train_acc},{val_acc},{test_acc}\n")
 
         print(
-            f"Epoch {epoch + 1}, Loss: {train_loss:.4f}, Train Acc: {train_acc * 100:.2f}%, Test Acc: {test_acc * 100:.2f}%"
+            f"Epoch {epoch + 1}, Loss: {train_loss:.4f}, Train Acc: {train_acc * 100:.2f}%, Val Acc: {val_acc * 100:.2f}%"
         )
 
-    print(f"Final Validation Accuracy: {val_acc * 100:.2f}%")
+    print(f"Final Test Accuracy: {test_acc * 100:.2f}%")
 
     if simexp_pool is None:
         b1530.dll.clear()
@@ -528,8 +528,12 @@ def get_devices_from_mmap(path):
     return devices
 
 
-def run_cf_exps():
+def run_cf_exps(simexp=False):
     import experiments_helpers as eh
+    import os
+
+    if "DATA" not in os.environ:
+        os.environ["DATA"] = "../shared_data"
 
     hps = {
         "arch": [32, 48, 48],
@@ -549,6 +553,12 @@ def run_cf_exps():
         "ternarize": False,
     }
 
+    if simexp:
+        hps["simexp"] = "lowvolteresets_measurements/base"
+        run_training(hps)
+        print("===== FINISHED =====")
+        return
+
     devices = get_devices_from_mmap("data/memory_maps/arraywr2_32-48-48.dat")
 
     for i in range(5):
@@ -558,9 +568,7 @@ def run_cf_exps():
         uc_driver = uc_aa.MCDriver()
         b1530.init()
 
-        eh.run_experiment(
-            uc_driver, "lowvolt_aa_reinit", user_selected_devices=devices
-        )
+        eh.run_experiment(uc_driver, "lowvolt_aa_reinit", user_selected_devices=devices)
 
         ## Run Training
         uc_driver.ser.close()
@@ -580,6 +588,10 @@ def run_cf_exps():
 
 def run_sff_exps(simexp=False):
     import experiments_helpers as eh
+    import os
+
+    if "DATA" not in os.environ:
+        os.environ["DATA"] = "../shared_data"
 
     hps = {
         "arch": [36, 48, 48],
@@ -600,7 +612,10 @@ def run_sff_exps(simexp=False):
     }
 
     if simexp:
-        hps["simexp"] = "march_slope_x3_5k"
+        hps["simexp"] = "lowvolteresets_measurements/base"
+        run_training(hps)
+        print("===== FINISHED =====")
+        return
 
     devices = get_devices_from_mmap(hps["memory_map"])
 

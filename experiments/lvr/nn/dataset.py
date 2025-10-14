@@ -19,7 +19,8 @@ class AnimalsConfig(NamedTuple):
     select_classes: Optional[Union[Sequence[int], Sequence[str]]] = None
 
     # Path to file
-    path: str = "Datasets/animals/animals_features_new.h5"
+    # path: str = "Datasets/animals/animals_features_new.h5"
+    path: str = "animals/animals_features.h5"
 
 
 class AnimalsDataset(Dataset):

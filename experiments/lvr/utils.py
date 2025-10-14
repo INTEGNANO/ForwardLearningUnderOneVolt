@@ -13,8 +13,17 @@ from typing import Generator
 from time import sleep
 
 ### GLOBALS ###
-psu1 = psu.Keith2230G(adress="GPIB1::2::INSTR", reset=0, silence_initial_measurements=1)
-psu2 = psu.Keith2230G(adress="GPIB1::5::INSTR", reset=0, silence_initial_measurements=1)
+try:
+    psu1 = psu.Keith2230G(
+        adress="GPIB1::2::INSTR", reset=0, silence_initial_measurements=1
+    )
+    psu2 = psu.Keith2230G(
+        adress="GPIB1::5::INSTR", reset=0, silence_initial_measurements=1
+    )
+except psu.visa.VisaIOError:
+    print("[WARNING] Power Supplies not connected")
+    psu1 = psu2 = None
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
@@ -54,21 +63,22 @@ def load_dataset(num_features, *, ternarize=False):
     else:
         transform = v2.Compose([])
 
+    # Actually, test/val have been confused in the first place
+    # In pratice, test is val and val is test
+    # Name corrected in code, name not corrected in dataset file for consistency with older versions of the code
     train_dataset = dataset.AnimalsDataset(
         dset_config, split="train", transform=transform
     )
+    val_dataset = dataset.AnimalsDataset(dset_config, split="test", transform=transform)
     test_dataset = dataset.AnimalsDataset(
-        dset_config, split="test", transform=transform
-    )
-    val_dataset = dataset.AnimalsDataset(
         dset_config, split="validation", transform=transform
     )
 
     train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True)
-    test_loader = DataLoader(test_dataset, batch_size=64)
     val_loader = DataLoader(val_dataset, batch_size=64)
+    test_loader = DataLoader(test_dataset, batch_size=64)
 
-    return train_loader, test_loader, val_loader
+    return train_loader, val_loader, test_loader
 
 
 def setup_logging(hyperparams: dict | str | Path, from_epoch=0):
@@ -120,9 +130,13 @@ def setup_logging(hyperparams: dict | str | Path, from_epoch=0):
         if hp not in hyperparams:
             raise ValueError(f"Expected '{hp}' in hyperparams")
 
-    if not hyperparams.get("fp32_training", False) and "simexp" not in hyperparams and "memory_map" not in hyperparams:
+    if (
+        not hyperparams.get("fp32_training", False)
+        and "simexp" not in hyperparams
+        and "memory_map" not in hyperparams
+    ):
         raise ValueError("Doing experiments, but no `memory_map` specified")
-    
+
     if hyperparams.get("fp32_training", False) and "learning_rate" not in hyperparams:
         raise ValueError("Training using FP32, but no 'learning_rate' specified")
 
@@ -130,16 +144,20 @@ def setup_logging(hyperparams: dict | str | Path, from_epoch=0):
         raise ValueError(
             "Hardware MAC is only implemented for SwissKnife chip ('sk'), not for AwesomeArray ('aa')"
         )
-    
+
     if (
         ("simexp" in hyperparams)
         + hyperparams["hardware_mac"]
         + hyperparams["fp32_training"]
     ) > 1:
-        raise ValueError("Only one of the three options can be set to True: `hardware_mac`, `fp32_training`, or `simexp`")
+        raise ValueError(
+            "Only one of the three options can be set to True: `hardware_mac`, `fp32_training`, or `simexp`"
+        )
 
     if hyperparams["hardware_mac"] and not hyperparams.get("ternarize", False):
-        raise ValueError("Hardware MAC is only implemented for ternarized inputs, please set `ternarize` to True")
+        raise ValueError(
+            "Hardware MAC is only implemented for ternarized inputs, please set `ternarize` to True"
+        )
 
     _setup_layerwise_params("scale_factor")
     _setup_layerwise_params("grad_thresh")
@@ -162,6 +180,9 @@ def setup_logging(hyperparams: dict | str | Path, from_epoch=0):
         json.dump(hyperparams, f, indent=2)
 
     with open(LOGDIR / "metrics.csv", "w") as f:
+        # Actually, test/val have been confused in the first place
+        # In pratice, test is val and val is test
+        # Corrected in code, not corrected in log for consistency with already-made runs
         f.write("epoch,train_loss,train_acc,test_acc,val_acc\n")
 
     return hyperparams, LOGDIR
@@ -216,6 +237,7 @@ def create_mlp(arch, device, *, relu_at_end=False):
 
     model = torch.nn.Sequential(*layers)
     return model.to(device)
+
 
 ### Power Supplies Utils
 def set_psu(chip):
