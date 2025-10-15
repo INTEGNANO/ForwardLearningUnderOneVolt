@@ -11,6 +11,14 @@ Code tested for Python >=3.10. It is preferable to use a Python venv, or Conda/M
 pip install -r requirements.txt
 ```
 
+### Dataset (re)generation
+You need to install `transformers`. Go to `shared_data/animals` and run:
+```
+$ pip install -r additional_requirements.txt
+$ python gen_features.py
+preprocessor_config.json: 100%|███████████████████████████████| 266/266 [00:00<?, ?B/s]
+# ...
+```
 
 ## `experiments`
 This folder contains the code used for experiments, as well as the "simexp" code. This "simexp" setup is using replays of measured low-voltage reset
