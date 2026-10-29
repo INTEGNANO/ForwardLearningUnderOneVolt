@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/1057830566.svg)](https://doi.org/10.5281/zenodo.23761700)
+
 # Forward-only learning in memristor arrays with month-scale stability
 Companion repository for `Forward-only learning in memristor arrays with month-scale stability` [unpublished yet; submitted].
 
